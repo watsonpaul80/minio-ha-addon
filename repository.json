@@ -1,0 +1,8 @@
+{
+  "name": "MinIO HA Add-on",
+  "url": "https://github.com/watsonpaul80/minio-ha-addon",
+  "maintainer": "Paul Watson",
+  "addons": [
+    "minio"
+  ]
+}
