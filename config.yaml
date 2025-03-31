@@ -9,6 +9,7 @@ advanced: true
 
 url: "https://github.com/watsonpaul80/minio-ha-addon"
 watchdog: "http://[HOST]:[PORT:9001]/minio/health/live"
+webui: "http://[HOST]:[PORT:9001]"
 
 panel_icon: mdi:server-network
 panel_title: MinIO
