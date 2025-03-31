@@ -1,102 +1,138 @@
-# MinIO Home Assistant Add-on (Ultimate Edition)
+MinIO Home Assistant Add-on
 
-## 🚀 Overview
-MinIO is a high-performance, S3-compatible object storage server ideal for storing backups, logs, and media — now available as a Home Assistant add-on! This add-on is designed to be flexible, user-friendly, and powerful.
 
----
 
-## ✅ Key Features
-- 🔐 Access/Secret Key or Username/Password support
-- 🗃️ Customizable storage path (default: `/data/minio`)
-- 🔄 External Web UI on port `9001`
-- 💡 Optional public directory for shared S3 buckets
-- 🧱 Multi-arch support (aarch64, amd64)
-- 📦 Built-in health check and logging
-- 🌐 Designed for use with SMB, backups, and cloud workflows
+High performance, self-hosted S3-compatible object storage server for Home Assistant.
 
----
+This is a fully integrated Home Assistant add-on that runs MinIO — a fast, S3-compatible storage service — with a lightweight footprint and powerful features.
 
-## 🔧 Configuration
-```yaml
+Features ✅
+
+🌐 Web UI Console (with optional SSL)
+
+🔐 Configurable Access Key and Secret Key
+
+🧠 Architecture detection (ARM64/AMD64)
+
+📦 Flexible storage paths and optional public bucket directory
+
+📁 SMB/NAS friendly design (store objects in /share or USB drives)
+
+🚦 Healthcheck & watchdog support
+
+⚡ Works with awscli, S3 backup scripts, and cloud sync tools
+
+Usage Examples
+
+🎯 Backing up Home Assistant to MinIO (with awscli)
+
+aws --endpoint-url http://homeassistant.local:9000 \
+    --no-verify-ssl \
+    s3 cp /config s3://ha-backups/ --recursive \
+    --access-key <your-access-key> \
+    --secret-key <your-secret-key>
+
+🧪 Testing S3 Access
+
+aws --endpoint-url http://homeassistant.local:9000 \
+    --no-verify-ssl \
+    s3 ls \
+    --access-key <your-access-key> \
+    --secret-key <your-secret-key>
+
+You can also use MinIO Client (mc) for advanced bucket control.
+
+Configuration
+
 access_key: "admin"
 secret_key: "minio123"
 port: 9000
 console_port: 9001
 storage_path: "/data/minio"
-public_bucket_path: "/share/minio/public"  # Optional
+public_bucket_path: "/share/minio/public"
 enable_ssl: false
-```
 
-### Configuration Options:
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `access_key` | string | required | S3 Access Key |
-| `secret_key` | string | required | S3 Secret Key |
-| `port` | int | `9000` | S3 API Port |
-| `console_port` | int | `9001` | MinIO Console Port |
-| `storage_path` | string | `/data/minio` | Where objects are stored |
-| `public_bucket_path` | string | None | Optional public-access directory |
-| `enable_ssl` | bool | false | SSL mode (certs in `/ssl`) |
+Option
 
----
+Description
 
-## 🌐 Access
-After installing, access the MinIO Console via:
-- Web UI: `http://homeassistant.local:9001`
-- S3 Endpoint: `http://homeassistant.local:9000`
+access_key
 
----
+MinIO login user (like AWS Access Key)
 
-## 🧪 S3 Usage Example
-```bash
-aws configure --profile minio-ha
-# Access Key: your access_key
-# Secret Key: your secret_key
-# Endpoint: http://homeassistant.local:9000
+secret_key
 
-aws --profile minio-ha s3 ls --endpoint-url http://homeassistant.local:9000
-```
+MinIO login password (like AWS Secret Key)
 
----
+port
 
-## 💾 SMB-Friendly Directories
-Map your storage to `/share/minio/objects` and expose:
-- `/share/minio/public` (optional public folder)
+Port for S3 API (used by awscli, mc)
 
-Use SMB to easily access these from your local network.
+console_port
 
----
+Web UI console port
 
-## 🔒 Security
-- Don't expose ports 9000/9001 publicly unless secured
-- Use strong access/secret keys
-- Use `readonly_mode` (coming soon!) for demo/testing
+storage_path
 
----
+Where objects are stored internally (default: /data/minio)
 
-## 👀 Future Ideas
-- Gateway mode for S3/Backblaze
-- SSL auto-cert management
-- Auto-bucket creation
-- Log streaming or MQTT upload events
+public_bucket_path
 
----
+Optional exposed SMB/share path for public files
 
-## 📎 Health Check
-Add-on uses:
-```yaml
-watchdog: "http://[HOST]:[PORT:9001]/minio/health/live"
-```
+enable_ssl
 
----
+Enables HTTPS using certs in /ssl
 
-## 🧠 Credits
-Made with ❤️ by Paul Watson
-- Repo: [minio-ha-addon](https://github.com/watsonpaul80/minio-ha-addon)
+Web Interface 🌐
 
-Pull requests, issues, and ideas welcome!
+Access MinIO Web UI at:
 
----
+http://homeassistant.local:9001
 
-Ready to become the most polished S3 add-on in Home Assistant land? Let’s gooo 🚀
+Or use your external IP like:
+
+http://192.168.3.19:9001
+
+Login with your configured access key and secret.
+
+Backing up Home Assistant with MinIO + awscli
+
+You can use a simple automation or bash script to upload your /config directory daily:
+
+aws s3 sync /config s3://ha-backups/ \
+    --endpoint-url http://homeassistant.local:9000 \
+    --access-key admin --secret-key minio123
+
+Development & Contributions
+
+Want to contribute? Fork the repo and feel free to raise an issue or PR:
+
+GitHub Repo: https://github.com/watsonpaul80/minio-ha-addon
+
+Credits
+
+MinIO — S3-compatible object storage engine
+
+Home Assistant Add-on Base Images by Home Assistant
+
+License
+
+GNU AGPLv3. See LICENSE for more information.
+
+🚀 Release Notes
+
+v1.1.0
+
+Initial public release
+
+Architecture auto-detect
+
+Flexible storage options
+
+Web UI and S3 API support
+
+Optional public bucket path
+
+Enjoy blazing-fast, self-hosted S3 storage directly inside Home Assistant!
 
