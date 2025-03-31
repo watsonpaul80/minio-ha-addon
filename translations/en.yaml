@@ -1,0 +1,27 @@
+configuration:
+access_key:
+name: Access Key
+description: The S3-compatible access key for your MinIO server.
+secret_key:
+name: Secret Key
+description: The S3-compatible secret key for your MinIO server.
+port:
+name: API Port
+description: Port for S3 API access (default: 9000).
+console_port:
+name: Console Port
+description: Port for the MinIO web console (default: 9001).
+storage_path:
+name: Storage Path
+description: Path to store MinIO objects (default: /data/minio).
+public_bucket_path:
+name: Public Bucket Path
+description: Optional path for public bucket folder (e.g. /share/minio/public).
+enable_ssl:
+name: Enable SSL
+description: Enable HTTPS using certs from /ssl (recommended for external access).
+
+network:
+"9000/tcp": MinIO S3 API
+"9001/tcp": MinIO Web Console
+
