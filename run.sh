@@ -11,21 +11,24 @@ STORAGE_PATH=$(jq -r '.storage_path // "/data/minio"' "$CONFIG_PATH")
 PUBLIC_PATH=$(jq -r '.public_bucket_path // empty' "$CONFIG_PATH")
 ENABLE_SSL=$(jq -r '.enable_ssl' "$CONFIG_PATH")
 
-# Create storage path
+# Ensure storage path exists
 mkdir -p "$STORAGE_PATH"
 
-# Optional public folder
+# Safe symlink creation
 if [[ -n "$PUBLIC_PATH" ]]; then
     mkdir -p "$PUBLIC_PATH"
-    ln -s "$PUBLIC_PATH" "$STORAGE_PATH/public"
+    if [[ ! -L "$STORAGE_PATH/public" && ! -e "$STORAGE_PATH/public" ]]; then
+        ln -s "$PUBLIC_PATH" "$STORAGE_PATH/public"
+    fi
 fi
 
 export MINIO_ROOT_USER="$ACCESS_KEY"
 export MINIO_ROOT_PASSWORD="$SECRET_KEY"
 
-SSL_OPTS=""
 if [[ "$ENABLE_SSL" == "true" ]]; then
   SSL_OPTS="--certs-dir /ssl"
+else
+  SSL_OPTS=""
 fi
 
 echo "[INFO] Starting MinIO"
